@@ -96,7 +96,7 @@ typings/
 # public
 
 # vuepress build output
-.vuepress/dist
+# .vuepress/dist
 
 # Serverless directories
 .serverless/
@@ -113,7 +113,7 @@ typings/
 
 # folders that should be ignored by the gitignore file
 node_modules/
-dist/
+# dist/
 requirements/
 /node_modules
 /requirements

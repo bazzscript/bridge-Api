@@ -1,0 +1,13 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.myContainer = void 0;
+require("reflect-metadata");
+const inversify_1 = require("inversify");
+const AuthService_1 = require("./services/AuthService");
+const ProfileService_1 = require("./services/ProfileService");
+const PropertyService_1 = require("./services/PropertyService");
+const myContainer = new inversify_1.Container();
+exports.myContainer = myContainer;
+myContainer.bind("IAuthService").to(AuthService_1.AuthService);
+myContainer.bind("IProfileService").to(ProfileService_1.ProfileService);
+myContainer.bind("IPropertyService").to(PropertyService_1.PropertyService);
