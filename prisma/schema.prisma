@@ -1,0 +1,132 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserType {
+  TENANT
+  LANDLORD
+}
+
+model User {
+  id       Int    @id @unique @default(autoincrement())
+  email    String @unique
+  password String
+
+  firstName String?
+  lastName  String?
+
+  userType UserType
+  tenant   Tenant?
+  landlord LandLord?
+
+  acceptedBids Bid[] @relation(name: "acceptedByUser")
+  rejectedBids Bid[] @relation(name: "rejectedByUser")
+
+  transactions Transaction[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model LandLord {
+  id Int @id @unique @default(autoincrement())
+
+  user   User @relation(fields: [userId], references: [id])
+  userId Int  @unique
+
+  counterBids Bid[]
+
+  properties Property[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Tenant {
+  id Int @id @unique @default(autoincrement())
+
+  user   User  @relation(fields: [userId], references: [id])
+  userId Int   @unique
+  bids   Bid[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Property {
+  id Int @id @unique @default(autoincrement())
+
+  landLord   LandLord @relation(fields: [landLordId], references: [id])
+  landLordId Int
+
+  price         Decimal  @default(0) @db.Decimal(32, 2)
+  address       String
+  amenities     String[]
+  numberOfRooms Int
+  mediaUrls     String[]
+  bids          Bid[]
+
+  sold      Boolean @default(false)
+  soldPrice Decimal @default(0) @db.Decimal(32, 2)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// A Tenant Can Creat A New Bid, A LandLord Can Counter BId, Either The Tenant Or The LandLord Can Accept A Bid
+model Bid {
+  id Int @id @unique @default(autoincrement())
+
+  property   Property @relation(fields: [propertyId], references: [id], onDelete: Restrict)
+  propertyId Int
+
+  tenant    Tenant? @relation(fields: [tenantId], references: [id], onDelete: SetNull)
+  tenantId  Int?
+  bidAmount Decimal @default(0) @db.Decimal(32, 2)
+
+  landLord         LandLord? @relation(fields: [landLordId], references: [id], onDelete: SetNull)
+  landLordId       Int?
+  counterBidAmount Decimal?  @db.Decimal(32, 2)
+
+  accepted         Boolean @default(false)
+  acceptedByUser   User?   @relation(fields: [acceptedByUserId], references: [id], name: "acceptedByUser")
+  acceptedByUserId Int?
+
+  rejectedByUser   User? @relation(fields: [rejectedByUserId], references: [id], name: "rejectedByUser")
+  rejectedByUserId Int?
+
+  transactions Transaction[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+enum TransactionStatus {
+  FAILED
+  PENDING
+  SUCCESSFULL
+}
+
+model Transaction {
+  id Int @id @unique @default(autoincrement())
+
+  amount            Decimal           @db.Decimal(32, 2)
+  transactionStatus TransactionStatus
+
+  bid   Bid @relation(fields: [bidId], references: [id])
+  bidId Int
+
+  user   User? @relation(fields: [userId], references: [id])
+  userId Int?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
