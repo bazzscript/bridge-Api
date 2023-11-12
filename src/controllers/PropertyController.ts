@@ -15,7 +15,7 @@ import {
   checkRoleIsTenant,
   verifyToken,
 } from "../middlewares/authMiddleware";
-import StorageService from "../helpers/storageHelpers";
+// import StorageService from "../helpers/storageHelpers";
 import validator from "validator";
 
 @controller("/property")
@@ -109,49 +109,49 @@ export class PropertyController {
   }
 
   // UPLOAD PROPERTY MEDIAS
-  @httpPost(
-    "/upload_medias",
+  // @httpPost(
+  //   "/upload_medias",
 
-    // verifyToken,
+  //   // verifyToken,
 
-    StorageService.uploadMedia.array("medias", 10)
+  //   StorageService.uploadMedia.array("medias", 10)
 
-    // verifyToken,
-  )
-  public async uploadImages(
-    @request() req: any,
-    @response() res: Response
-  ): Promise<Response> {
-    try {
-      let mediaUrls = [];
+  //   // verifyToken,
+  // )
+  // public async uploadImages(
+  //   @request() req: any,
+  //   @response() res: Response
+  // ): Promise<Response> {
+  //   try {
+  //     let mediaUrls = [];
 
-      // Images Upload
-      const images = req.files;
-      if (images && images.length > 0) {
-        if (Array.isArray(images)) {
-          mediaUrls = images.map((image) => image.location);
-        }
+  //     // Images Upload
+  //     const images = req.files;
+  //     if (images && images.length > 0) {
+  //       if (Array.isArray(images)) {
+  //         mediaUrls = images.map((image) => image.location);
+  //       }
 
-        console.log(mediaUrls);
-      }
+  //       console.log(mediaUrls);
+  //     }
 
-      return res.status(201).json({
-        success: true,
-        statusCode: 201,
-        message: "property images uploaded successfully",
-        data: {
-          mediaUrls,
-        },
-      });
-    } catch (error: any) {
-      return res.status(400).json({
-        success: false,
-        statusCode: 400,
-        message: error.message,
-        data: {},
-      });
-    }
-  }
+  //     return res.status(201).json({
+  //       success: true,
+  //       statusCode: 201,
+  //       message: "property images uploaded successfully",
+  //       data: {
+  //         mediaUrls,
+  //       },
+  //     });
+  //   } catch (error: any) {
+  //     return res.status(400).json({
+  //       success: false,
+  //       statusCode: 400,
+  //       message: error.message,
+  //       data: {},
+  //     });
+  //   }
+  // }
 
   // GET LIST OF PROPERTIES
   @httpGet(
