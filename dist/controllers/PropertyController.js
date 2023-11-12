@@ -29,7 +29,7 @@ const inversify_express_utils_1 = require("inversify-express-utils");
 const inversify_1 = require("inversify");
 const express_validator_1 = require("express-validator");
 const authMiddleware_1 = require("../middlewares/authMiddleware");
-const storageHelpers_1 = __importDefault(require("../helpers/storageHelpers"));
+// import StorageService from "../helpers/storageHelpers";
 const validator_1 = __importDefault(require("validator"));
 let PropertyController = class PropertyController {
     constructor(propertyService) {
@@ -94,37 +94,43 @@ let PropertyController = class PropertyController {
         });
     }
     // UPLOAD PROPERTY MEDIAS
-    uploadImages(req, res) {
-        return __awaiter(this, void 0, void 0, function* () {
-            try {
-                let mediaUrls = [];
-                // Images Upload
-                const images = req.files;
-                if (images && images.length > 0) {
-                    if (Array.isArray(images)) {
-                        mediaUrls = images.map((image) => image.location);
-                    }
-                    console.log(mediaUrls);
-                }
-                return res.status(201).json({
-                    success: true,
-                    statusCode: 201,
-                    message: "property images uploaded successfully",
-                    data: {
-                        mediaUrls,
-                    },
-                });
-            }
-            catch (error) {
-                return res.status(400).json({
-                    success: false,
-                    statusCode: 400,
-                    message: error.message,
-                    data: {},
-                });
-            }
-        });
-    }
+    // @httpPost(
+    //   "/upload_medias",
+    //   // verifyToken,
+    //   StorageService.uploadMedia.array("medias", 10)
+    //   // verifyToken,
+    // )
+    // public async uploadImages(
+    //   @request() req: any,
+    //   @response() res: Response
+    // ): Promise<Response> {
+    //   try {
+    //     let mediaUrls = [];
+    //     // Images Upload
+    //     const images = req.files;
+    //     if (images && images.length > 0) {
+    //       if (Array.isArray(images)) {
+    //         mediaUrls = images.map((image) => image.location);
+    //       }
+    //       console.log(mediaUrls);
+    //     }
+    //     return res.status(201).json({
+    //       success: true,
+    //       statusCode: 201,
+    //       message: "property images uploaded successfully",
+    //       data: {
+    //         mediaUrls,
+    //       },
+    //     });
+    //   } catch (error: any) {
+    //     return res.status(400).json({
+    //       success: false,
+    //       statusCode: 400,
+    //       message: error.message,
+    //       data: {},
+    //     });
+    //   }
+    // }
     // GET LIST OF PROPERTIES
     getPropertiesListing(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -444,18 +450,6 @@ __decorate([
     __metadata("design:paramtypes", [Object, Object]),
     __metadata("design:returntype", Promise)
 ], PropertyController.prototype, "createProperty", null);
-__decorate([
-    (0, inversify_express_utils_1.httpPost)("/upload_medias", 
-    // verifyToken,
-    storageHelpers_1.default.uploadMedia.array("medias", 10)
-    // verifyToken,
-    ),
-    __param(0, (0, inversify_express_utils_1.request)()),
-    __param(1, (0, inversify_express_utils_1.response)()),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object, Object]),
-    __metadata("design:returntype", Promise)
-], PropertyController.prototype, "uploadImages", null);
 __decorate([
     (0, inversify_express_utils_1.httpGet)("/listing", authMiddleware_1.verifyToken),
     __param(0, (0, inversify_express_utils_1.request)()),
