@@ -10,6 +10,7 @@ import { myContainer } from "./inversify.config";
 import "./controllers/AuthController";
 import "./controllers/ProfileController";
 import "./controllers/PropertyController";
+import "./controllers/PaymentController";
 
 const server = new InversifyExpressServer(myContainer);
 

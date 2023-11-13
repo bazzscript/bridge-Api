@@ -45,7 +45,7 @@ export async function verifyToken(
     req.user = user;
     return next();
   } catch (err) {
-    console.error(err);
+    // console.error(err);
     return res.status(401).send({
       statusCode: 401,
       message: "Invalid Token",

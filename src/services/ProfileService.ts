@@ -1,7 +1,6 @@
 import { injectable } from "inversify";
 import { IProfileService } from "../interfaces/IProfileService";
 import { PrismaClient, User, UserType } from "@prisma/client";
-import bcrypt from "bcrypt";
 
 const prisma = new PrismaClient();
 

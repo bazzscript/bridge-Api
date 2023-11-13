@@ -30,7 +30,8 @@ model User {
   acceptedBids Bid[] @relation(name: "acceptedByUser")
   rejectedBids Bid[] @relation(name: "rejectedByUser")
 
-  transactions Transaction[]
+  transactionsPaid     Transaction[] @relation(name: "payer")
+  transactionsRecieved Transaction[] @relation(name: "payee")
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -118,14 +119,18 @@ enum TransactionStatus {
 model Transaction {
   id Int @id @unique @default(autoincrement())
 
-  amount            Decimal           @db.Decimal(32, 2)
-  transactionStatus TransactionStatus
+  amount               Decimal           @db.Decimal(32, 2)
+  transactionStatus    TransactionStatus
+  transactionReference String            @unique
 
   bid   Bid @relation(fields: [bidId], references: [id])
   bidId Int
 
-  user   User? @relation(fields: [userId], references: [id])
-  userId Int?
+  payerUser   User? @relation(fields: [payerUserId], references: [id], name: "payer")
+  payerUserId Int?
+
+  payeeUser   User? @relation(fields: [payeeUserId], references: [id], name: "payee")
+  payeeUserId Int?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
