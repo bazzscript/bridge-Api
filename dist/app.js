@@ -12,6 +12,7 @@ const inversify_config_1 = require("./inversify.config");
 require("./controllers/AuthController");
 require("./controllers/ProfileController");
 require("./controllers/PropertyController");
+require("./controllers/PaymentController");
 const server = new inversify_express_utils_1.InversifyExpressServer(inversify_config_1.myContainer);
 server.setConfig((app) => {
     app.use(body_parser_1.default.json());

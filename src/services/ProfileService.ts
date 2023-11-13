@@ -16,7 +16,8 @@ export class ProfileService implements IProfileService {
       include: {
         tenant: true,
         landlord: true,
-        transactions: true,
+        transactionsPaid: true,
+        transactionsRecieved: true,
       },
     });
 

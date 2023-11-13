@@ -85,7 +85,7 @@ export class PaymentService implements IPaymentService {
       const payerName = user.firstName + " " + user.lastName;
       const payerUserId = bid.tenant?.user.id!;
       const payeeUserId = bid.property.landLord.user.id!;
-      console.log(payerName, payerUserId, payeeUserId, amountToBePayed);
+
       if (!payeeUserId || !payerUserId) {
         throw new Error("Problem with payment");
       }
@@ -98,7 +98,7 @@ export class PaymentService implements IPaymentService {
       });
 
       const ref = paystack.data.reference;
-      console.log(ref);
+
       // Create A Transaction
       const transaction = await tx.transaction.create({
         data: {
@@ -122,7 +122,74 @@ export class PaymentService implements IPaymentService {
   }
 
   // VERIFY PAYMENT FOR A BID
-  //   public async verifyPaymentWithPaystack(args: {
-  //     transactionReference: string;
-  //   }): Promise<any> {}
+  public async verifyPaymentWithPaystack(args: {
+    transactionReference: string;
+  }): Promise<any> {
+    const query = await prisma.$transaction(async (tx) => {
+      // Check If Transaction Reference Exists
+      const transaction = await tx.transaction.findUniqueOrThrow({
+        where: {
+          transactionReference: args.transactionReference,
+        },
+        include: {
+          bid: {
+            include: {
+              property: true,
+            },
+          },
+        },
+      });
+
+      // Query Paystack to confirm trnasaction was succefull
+      const paystack = await PaystackHelpers.verifyTransaction(
+        transaction.transactionReference
+      );
+
+      const transactionStatus = paystack.data.status;
+
+      if (transactionStatus === "abandoned") {
+        throw new Error("Payment was not completed");
+      }
+      if (transactionStatus !== "success") {
+        throw new Error("Payment was not completed");
+      }
+
+      // if it is successful update transaction to sucessful
+      let transactionUpdated;
+      if (transactionStatus === "success") {
+        // if it is successful update transaction to sucessful
+        transactionUpdated = await tx.transaction.update({
+          where: {
+            id: transaction.id,
+          },
+          data: {
+            transactionStatus: "SUCCESSFULL",
+          },
+        });
+
+        const propertyId = transaction.bid.propertyId;
+
+        if (!propertyId) {
+          throw new Error("Problem with payment");
+        }
+        // update property to sold
+        await tx.property.update({
+          where: {
+            id: propertyId,
+          },
+          data: {
+            sold: true,
+            soldPrice: Number(transaction.amount),
+          },
+        });
+      }
+
+      return {
+        // paystack,
+        transaction: transactionUpdated,
+      };
+    });
+
+    return query;
+  }
 }

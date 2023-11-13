@@ -6,7 +6,9 @@ export interface IPaymentService {
   }): Promise<any>;
 
   // VERIFY PAYMENT FOR A BID
-  // verifyPayment(args: { transactionReference: string }): Promise<any>;
+  verifyPaymentWithPaystack(args: {
+    transactionReference: string;
+  }): Promise<any>;
 
   // CONFIRM PAYMENT FOR A BID
   // WEBHOOK TO AUTOMATICALLY CONFIRM PAYMENT FOR A BID

@@ -46,7 +46,6 @@ export class PaystackHelpers {
       );
 
       const data = response.data;
-      console.log(data);
       return data;
     } catch (error) {
       // Handle or throw the error
@@ -71,7 +70,6 @@ export class PaystackHelpers {
       );
 
       const data = response.data;
-      console.log(data);
       return data;
     } catch (error) {
       // Handle or throw the error as appropriate

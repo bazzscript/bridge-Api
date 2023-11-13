@@ -30,7 +30,8 @@ let ProfileService = class ProfileService {
                 include: {
                     tenant: true,
                     landlord: true,
-                    transactions: true,
+                    transactionsPaid: true,
+                    transactionsRecieved: true,
                 },
             });
             if (!user) {

@@ -46,7 +46,6 @@ class PaystackHelpers {
                     },
                 });
                 const data = response.data;
-                console.log(data);
                 return data;
             }
             catch (error) {
@@ -69,7 +68,6 @@ class PaystackHelpers {
                     },
                 });
                 const data = response.data;
-                console.log(data);
                 return data;
             }
             catch (error) {
